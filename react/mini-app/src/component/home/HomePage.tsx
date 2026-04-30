@@ -1,15 +1,15 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {Logo} from '../../src/logo/Logo'
 import './hompage.css';
 
 const HomePage = () => {
-    const [message, setMessage] = useState("")
     const [isActive, setActive] = useState(false);
     const handleDragStart = () => setActive(true);
     const handleDragEnd = () => setActive(false);
     
-    const handleDrop = async (event: React.DragEvent) => {
+    const handleDrop = useCallback(async (event: React.DragEvent<HTMLLabelElement>) => {
+        console.log("실행");
         event.preventDefault();
 
         const file = event.dataTransfer.files[0];
@@ -17,6 +17,10 @@ const HomePage = () => {
 
         const result = await uploadFile(file);
         console.log(result);
+    }, [])
+
+    const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
     };
 
     const uploadFile = async (file: File) => {
@@ -39,6 +43,7 @@ const HomePage = () => {
             <label className={`preview${isActive ? ' active' : ''}`}  // isActive 값에 따라 className 제어
                    onDragEnter={handleDragStart}  // dragstart 핸들러 추가
                    onDragLeave={handleDragEnd}  // dragend 핸들러 추가
+                   onDragOver={handleDragOver}
                    onDrop={handleDrop}>
                 <input type="file" className="file" />
                 <Logo />
