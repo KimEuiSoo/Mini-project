@@ -32,8 +32,8 @@ const LoginPage = () => {
 
   useEffect(()=>{
     if(fetch[0].response){
-      const {accessToken} = fetch[0].response;
-      setCookie('AccessToken', `Bearer ${accessToken}`)
+      const {access_token} = fetch[0].response;
+      setCookie('AccessToken', `${access_token}`)
     }
   },[fetch[0].response])
 

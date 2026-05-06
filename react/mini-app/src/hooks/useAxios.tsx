@@ -45,7 +45,7 @@ const useAxios = <T, >({
 					setResponse(res.data);
 				})
 				.catch((err) => {
-					alert(err.response.data.message);
+					alert(err.response.data.detail.message);
 				})
 				.finally(()=>{
 					modifyLoading(false);					
@@ -57,7 +57,7 @@ const useAxios = <T, >({
 					setResponse(res.data);
 				})
 				.catch((err) => {
-					alert(err.response.data.message);
+					alert(err.response.data.detail.message);
 				})
 				.finally(() => {
 					modifyLoading(false);

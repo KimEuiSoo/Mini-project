@@ -1,7 +1,7 @@
 export interface loginResponse {
-    accessToken: string;
+    access_token: string;
 }
 
 export const EmptyLogin: loginResponse = {
-    accessToken: ''
+    access_token: ''
 }
