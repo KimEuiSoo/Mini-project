@@ -3,7 +3,10 @@ import React from "react";
 const Header = () => {
     return(
         <header>
-            헤더
+            <div>
+
+            </div>
+            <button type="button" />
         </header>
     )
 }

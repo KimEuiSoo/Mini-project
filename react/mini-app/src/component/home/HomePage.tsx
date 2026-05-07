@@ -1,17 +1,17 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
-import {Logo} from '../../src/logo/Logo'
-import './hompage.css';
+import React, {useState, useEffect, useCallback} from 'react';
+import clsN from 'classnames';
+import styles from './styles/HomePage.module.scss'
+import UploadSVG from '../../asset/svg/UploadSVG';
 import useAxios from '../../hooks/useAxios';
 import { getCookie } from '../../util/cookie/Cookie';
 import { uploadResponse } from '../../models/uploadResponse';
+import FolderSVG from '../../asset/svg/FolderSVG';
+import SettingSVG from '../../asset/svg/SeetingSVG';
+
 
 const HomePage = () => {
     const [formData, setformData] = useState<FormData>();
     const accessToken = getCookie('AccessToken');
-    const [isActive, setActive] = useState(false);
-    const handleDragStart = () => setActive(true);
-    const handleDragEnd = () => setActive(false);
     
     const handleDrop = useCallback(async (event: React.DragEvent<HTMLLabelElement>) => {
         console.log("실행");
@@ -59,17 +59,32 @@ const HomePage = () => {
     },[fetchUpload])
 
     return(
-        <div>
-            <label className={`preview${isActive ? ' active' : ''}`}  // isActive 값에 따라 className 제어
-                   onDragEnter={handleDragStart}  // dragstart 핸들러 추가
-                   onDragLeave={handleDragEnd}  // dragend 핸들러 추가
-                   onDragOver={handleDragOver}
-                   onDrop={handleDrop}>
-                <input type="file" className="file"/>
-                <Logo />
-                <p className="preview_msg">클릭 혹은 파일을 이곳에 드롭하세요.</p>
-                <p className="preview_desc">파일당 최대 3MB</p>
-            </label>
+        <div className={clsN(styles.home)}>
+            <div className={clsN(styles['home-wrapper'])}>
+                <h2>파일 관리 시스템에 오신 것을 환영합니다</h2>
+                <p>간편하고 안전한 파일 업로드 및 관리</p>
+                <div className={clsN(styles['home-wrapper__grid-box'])}>
+                    <label className={clsN(styles['home-wrapper__button'])}
+                            onDragOver={handleDragOver}
+                            onDrop={handleDrop}>
+                        <UploadSVG/>
+                        <h3>파일 업로드</h3>
+                        <p>다양한 형식의 파일을 빠르고 안전하게 업로드하세요</p>
+                    </label>
+                    
+                    <label className={clsN(styles['home-wrapper__button'])}>
+                        <FolderSVG/>
+                        <h3>파일 관리</h3>
+                        <p>업로드된 파일을 체계적으로 관리하고 정리하세요</p>
+                    </label>
+                    
+                    <label className={clsN(styles['home-wrapper__button'])}>
+                        <SettingSVG/>
+                        <h3>간편 설정</h3>
+                        <p>직관적인 인터페이스로 쉽게 설정을 변경하세요</p>
+                    </label>
+                </div>
+            </div>
         </div>
     )
 }

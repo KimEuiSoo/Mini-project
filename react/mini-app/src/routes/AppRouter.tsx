@@ -2,6 +2,7 @@ import React from "react";
 import {Route, Routes} from "react-router-dom";
 import HomeRouter from "./home/HomeRouter";
 import LoginRouter from "./auth/LoginRouter";
+import ManagerRouter from "./manager/ManagerRouter";
 
 export const AppRouter = () => {
     return(
@@ -9,6 +10,7 @@ export const AppRouter = () => {
             <Routes>
                 <Route path='/' element={<HomeRouter/>}/>
                 <Route path='/login' element={<LoginRouter/>}/>
+                <Route path='/manager' element={<ManagerRouter/>}/>
             </Routes>
         </div>
     )
