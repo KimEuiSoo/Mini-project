@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, status, File, Depends
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from typing import List
@@ -10,7 +10,7 @@ import uuid
 from models import User, Upload
 from database import get_db
 from auth.dependencies import get_current_user
-from schemas import FileResponse
+from schemas import FileResponse, FileDelete
 
 
 load_dotenv()
@@ -75,4 +75,53 @@ def file_list(
     )
 
     return files
+
+@router.delete(
+    "/file/admin/delete/{upload_id}",
+    response_model=FileDelete,
+    response_model_by_alias=True
+)
+def file_admin_delete(
+    upload_id: int,
+    db: Session = Depends(get_db)
+):
+    delete = (
+        db.query(Upload)
+        .filter(
+            Upload.upload_id == upload_id,
+        )
+        .first()
+    )
+
+    if delete is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="파일을 찾을 수 없습니다."
+        )
+
+    try:
+        db.query(Upload).filter(Upload.upload_id == upload_id).delete()
+        db.commit()
     
+        return {
+            "message": "해당 파일을 성공적으로 삭제하였습니다.",
+            "code": 200
+        }
+    
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="서버에 저장된 파일을 찾을 수 없습니다."
+        )
+    
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"문서 삭제 중 오류가 발생했습니다: {str(e)}"
+        )

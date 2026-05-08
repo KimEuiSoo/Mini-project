@@ -28,12 +28,15 @@ const LoginPage = () => {
 	});
 
   const onClickHandle = () => {
-
     if(email===process.env.REACT_APP_ADMIN_ID && password===process.env.REACT_APP_ADMIN_PW){
       navigation('/manager');
     }else{
       fetch[1]();
     }
+  }
+
+  const onSignupHandle = () => {
+    navigation('/signup')
   }
 
   useEffect(()=>{
@@ -65,6 +68,10 @@ const LoginPage = () => {
                  onChange={(e) => setPassword(e.target.value)}/>
         </form>
         <button type="submit" className={clsN(styles['login-wrapper__button'])} onClick={onClickHandle}>로그인</button>
+        <div className={clsN(styles['login-wrapper__signup'])}>
+          <p>계정이 없으신가요?</p>
+          <button onClick={onSignupHandle}>회원가입</button>
+        </div>
       </div>
     </div>
   );

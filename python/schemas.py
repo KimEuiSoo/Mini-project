@@ -43,7 +43,11 @@ class FileResponse(BaseModel):
             return None
 
         return value.strftime("%Y년 %m월 %d일")
-    
+
+class FileDelete(BaseModel):
+    message: str
+    code: int
+
 class SummaryResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 

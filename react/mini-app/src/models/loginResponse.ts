@@ -5,3 +5,9 @@ export interface loginResponse {
 export const EmptyLogin: loginResponse = {
     access_token: ''
 }
+
+export interface UserResponse {
+    id: number;
+    email: string;
+    name: string;
+}
