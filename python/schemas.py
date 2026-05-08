@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, field_serializer
+from pydantic import BaseModel, EmailStr, Field, field_serializer, ConfigDict
 from datetime import datetime
 
 class UserCreate(BaseModel):
@@ -43,3 +43,10 @@ class FileResponse(BaseModel):
             return None
 
         return value.strftime("%Y년 %m월 %d일")
+    
+class SummaryResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    upload_id: int = Field(serialization_alias="uploadId")
+    file_name: str = Field(serialization_alias="fileName")
+    summary_text: str = Field(serialization_alias="summaryText")

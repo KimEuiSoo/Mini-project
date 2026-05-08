@@ -4,7 +4,7 @@ export interface uploadResponse {
 }
 
 export interface fileResponse{
-    fileid: number,
+    fileId: number,
     userId: number,
     filePath: string,
     fileName: string,
