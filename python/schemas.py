@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-
+from pydantic import BaseModel, EmailStr, Field, field_serializer
+from datetime import datetime
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -24,3 +24,22 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class FileResponse(BaseModel):
+    upload_id: int = Field(serialization_alias="fileId")
+    user_id: int = Field(serialization_alias="userId")
+    upload_name: str = Field(serialization_alias="fileName")
+    upload_path: str = Field(serialization_alias="filePath")
+    upload_type: str | None = Field(serialization_alias="fileType")
+    upload_size: int | None = Field(serialization_alias="fileSize")
+    created_at: datetime | None = Field(serialization_alias="createdAt")
+
+    class Config:
+        from_attributes = True
+
+    @field_serializer("created_at")
+    def serialize_created_at(self, value: datetime | None):
+        if value is None:
+            return None
+
+        return value.strftime("%Y년 %m월 %d일")

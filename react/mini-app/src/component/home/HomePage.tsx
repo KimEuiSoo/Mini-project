@@ -4,13 +4,15 @@ import styles from './styles/HomePage.module.scss'
 import UploadSVG from '../../asset/svg/UploadSVG';
 import useAxios from '../../hooks/useAxios';
 import { getCookie } from '../../util/cookie/Cookie';
-import { uploadResponse } from '../../models/uploadResponse';
+import { fileResponse, uploadResponse } from '../../models/uploadResponse';
 import FolderSVG from '../../asset/svg/FolderSVG';
 import SettingSVG from '../../asset/svg/SeetingSVG';
+import FileList from '../file/FileList';
 
 
 const HomePage = () => {
     const [formData, setformData] = useState<FormData>();
+    const [files, setFiles] = useState<fileResponse[]>();
     const accessToken = getCookie('AccessToken');
     
     const handleDrop = useCallback(async (event: React.DragEvent<HTMLLabelElement>) => {
@@ -30,7 +32,7 @@ const HomePage = () => {
 
     const fetchUpload = useAxios<uploadResponse>({
         method: 'post',
-        url: '/upload',
+        url: '/file/upload',
         config: {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -39,11 +41,24 @@ const HomePage = () => {
         data: formData
     })
 
+    const fetchFile = useAxios<fileResponse[]>({
+        method: 'get',
+        url: '/file/list',
+    })
+
     const uploadHandle = (file: File) => {
         const formData = new FormData();
         formData.append("file", file);
         setformData(formData);
     }
+
+    const fileClickHandle = (file: fileResponse) => {
+        console.log(file.filePath);
+    }
+
+    useEffect(()=>{
+        fetchFile[1]();
+    },[])
 
     useEffect(()=>{
         if(formData){
@@ -57,6 +72,12 @@ const HomePage = () => {
             alert(message)
         }
     },[fetchUpload])
+
+    useEffect(()=>{
+        if(fetchFile[0].response){
+            setFiles(fetchFile[0].response)
+        }
+    },[fetchFile])
 
     return(
         <div className={clsN(styles.home)}>
@@ -74,7 +95,7 @@ const HomePage = () => {
                     
                     <label className={clsN(styles['home-wrapper__button'])}>
                         <FolderSVG/>
-                        <h3>파일 관리</h3>
+                        <h3>내 파일 관리</h3>
                         <p>업로드된 파일을 체계적으로 관리하고 정리하세요</p>
                     </label>
                     
@@ -84,6 +105,7 @@ const HomePage = () => {
                         <p>직관적인 인터페이스로 쉽게 설정을 변경하세요</p>
                     </label>
                 </div>
+                {files && <FileList files={files} onClick={fileClickHandle}/>}
             </div>
         </div>
     )

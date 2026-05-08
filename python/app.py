@@ -5,7 +5,7 @@ import os
 
 from auth.signup import router as signup_router
 from auth.login import router as login_router
-from upload.upload import router as upload_router
+from file.file import router as upload_router
 from summary.summary import router as summary_router
 
 app = FastAPI()

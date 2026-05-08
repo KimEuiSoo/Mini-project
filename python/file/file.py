@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
+from typing import List
 
 import shutil
 import os
@@ -9,6 +10,8 @@ import uuid
 from models import User, Upload
 from database import get_db
 from auth.dependencies import get_current_user
+from schemas import FileResponse
+
 
 load_dotenv()
 
@@ -18,7 +21,7 @@ UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.post("/upload")
+@router.post("/file/upload")
 async def upload_file(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
@@ -57,3 +60,19 @@ async def upload_file(
         },
         "user": current_user.email
     }
+
+@router.get(
+    "/file/list",
+    response_model=List[FileResponse]
+)
+def file_list(
+    db: Session = Depends(get_db)
+):
+    files = (
+        db.query(Upload)
+        .order_by(Upload.created_at.asc())
+        .all()
+    )
+
+    return files
+    
