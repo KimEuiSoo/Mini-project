@@ -10,7 +10,6 @@ from summary.service import summarize_document
 
 router = APIRouter(tags=["Summary"])
 
-
 @router.post(
     "/summary/{upload_id}",
     response_model=SummaryResponse,

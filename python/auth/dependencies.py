@@ -10,14 +10,16 @@ from database import get_db
 from models import User
 from common.errors import raise_error
 
+# .env 데이터 로드
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 
+# Bear security 적용
 security = HTTPBearer()
 
-
+# access token 발급 받은 것을 확인하는 함수
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
@@ -45,6 +47,7 @@ def get_current_user(
             "유효하지 않은 토큰입니다.",
         )
 
+    # 토큰을 가지고 email 정보를 받아 db에서 email이 같은 유저를 탐색
     user = db.query(User).filter(User.email == email).first()
 
     if user is None:
@@ -53,4 +56,5 @@ def get_current_user(
             "사용자를 찾을 수 없습니다.",
         )
 
+    # 유저 정보 반환 
     return user
