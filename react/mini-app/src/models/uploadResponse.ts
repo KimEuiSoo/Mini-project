@@ -9,6 +9,7 @@ export interface fileResponse{
     filePath: string,
     fileName: string,
     fileType: string,
+    fileSize: string,
     createdAt: string,
 }
 

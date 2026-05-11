@@ -93,3 +93,150 @@
         }
     }
 }
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top : 24px;
+}
+
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        background-color: #f9fafb;
+    }
+
+    th {
+        padding: 16px 24px;
+
+        color: #111827;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: left;
+
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 18px 24px;
+
+        color: #374151;
+        font-size: 15px;
+        vertical-align: middle;
+
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    tbody {
+        tr {
+            background-color: #ffffff;
+            transition: background-color 0.15s ease;
+
+            &:hover {
+                background-color: #f9fafb;
+            }
+        }
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+
+    &__check {
+        width: 56px;
+    }
+
+    &__name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        color: #111827;
+        font-weight: 500;
+    }
+
+    &__icon {
+        color: #6b7280;
+        font-size: 18px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    &__download,
+    &__delete,
+    &__more {
+        padding: 0;
+
+        border: none;
+        background: none;
+
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    &__download {
+        color: #2563eb;
+
+        &:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+        }
+
+        &:active {
+            transform: translateY(1px) scale(0.92);
+            background-color: #dbeafe;
+            box-shadow: none;
+        }
+    }
+
+    &__delete {
+        color: #ef4444;
+
+        &:hover {
+            background-color: #fef2f2;
+            color: #dc2626;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+        }
+
+        &:active {
+            transform: translateY(1px) scale(0.92);
+            background-color: #fee2e2;
+            box-shadow: none;
+        }
+    }
+
+    &__more {
+
+        &:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+        }
+
+        &:active {
+            transform: translateY(1px) scale(0.92);
+            background-color: #e5e7eb;
+            box-shadow: none;
+        }
+    }
+}
+
+.file-count {
+    padding: 20px 24px;
+
+    color: #475569;
+    font-size: 14px;
+    background-color: #ffffff;
+}

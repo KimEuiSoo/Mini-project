@@ -42,6 +42,11 @@ body,
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+
+    &__svg{
+        font-size: 36px;
+        color: #fff
+    }
     
     h1 {
         margin: 0;

@@ -3,7 +3,6 @@ import { useRecoilValue } from "recoil";
 import { loadingAtom } from "../../recoil/atom/loadingAtom";
 import Loading from "./loading/Loading";
 import Header from "./header/Header";
-import Footer from "./footer/Footer";
 
 interface LayoutProps{
     children: React.ReactNode

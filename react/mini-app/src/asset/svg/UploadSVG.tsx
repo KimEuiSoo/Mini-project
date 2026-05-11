@@ -1,4 +1,9 @@
-const UploadSVG = () => {
+import clsN from 'classnames'
+interface UploadSVGProps{
+  className?: string;
+}
+
+const UploadSVG = ({className}: UploadSVGProps) => {
   return (
     <svg
        xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +15,7 @@ const UploadSVG = () => {
        stroke-width="2"
        stroke-linecap="round" 
        stroke-linejoin="round"
-       className="lucide lucide-upload-icon lucide-upload">
+       className={clsN("lucide lucide-upload-icon lucide-upload", className)}>
       <path d="M12 3v12"/>
       <path d="m17 8-5-5-5 5"/>
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>

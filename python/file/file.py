@@ -88,11 +88,17 @@ def file_admin_search(
 ):
     query = db.query(Upload)
 
-    if keyword:
-        query = query.filter(Upload.upload_name.like(f"%{keyword}%"))
+    # keyword가 None이거나 ""이면 검색 필터 안 걸림 = 전체 조회
+    if keyword and keyword.strip():
+        query = query.filter(
+            Upload.upload_name.like(f"%{keyword.strip()}%")
+        )
 
-    if file_type != "all":
-        query = query.filter(Upload.upload_type.like(f"%{file_type}%"))
+    # file_type이 없거나 all이면 타입 필터 안 걸림
+    if file_type and file_type != "all":
+        query = query.filter(
+            Upload.upload_type.like(f"%{file_type}%")
+        )
 
     files = (
         query
@@ -108,7 +114,7 @@ def file_admin_search(
         }
 
     return {
-        "message": "검색 성공",
+        "message": "조회 성공",
         "data": files,
         "code": 200
     }

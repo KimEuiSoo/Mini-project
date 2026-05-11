@@ -22,7 +22,6 @@ const HomePage = () => {
     const [formData, setFormData] = useState<FormData>();
     const [files, setFiles] = useState<fileResponse[]>();
     const accessToken = getCookie('AccessToken');
-    const loading = useRecoilValue(loadingAtom);
 
     /* 업로드 api*/
     const fetchUpload = useAxios<uploadResponse>({
@@ -88,6 +87,7 @@ const HomePage = () => {
     /* 특정 파일 선택 핸들러
        => 파일 리스트에서 하나의 파일 선택 시 selectedFile 상태값 변경 및 Modal 열기 */
     const fileClickHandle = async (file: fileResponse) => {
+        setSummaryText("");
         setSelectedFile(file);
         setIsModalOpen(true);
     }
@@ -141,9 +141,7 @@ const HomePage = () => {
     },[fetchFile[0].response])
 
     return(
-        <div className={clsN(styles.home)}>
-            {loading ? <Loading/> : <div>
-                
+        <div className={clsN(styles.home)}>        
             <div className={clsN(styles['home-wrapper'])}>
                 <h2>파일 관리 시스템에 오신 것을 환영합니다</h2>
                 <p>간편하고 안전한 파일 업로드 및 관리</p>
@@ -215,7 +213,6 @@ const HomePage = () => {
                     </div>
                 )}
             </Modal>
-            </div>}
         </div>
     )
 }

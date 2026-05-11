@@ -4,6 +4,7 @@ import styles from "./styles/ManagerPage.module.scss"
 import ManagerFileList from "./ManagerFileList";
 import useAxios from "../../hooks/useAxios";
 import { fileResponse,fileSearchResponse } from "../../models/uploadResponse";
+import { Upload } from 'lucide-react';
 
 const ManagerPage = () => {
     const [files, setFiles] = useState<fileResponse[]>();
@@ -51,14 +52,29 @@ const ManagerPage = () => {
 
     /* mount, unmount, 검색어 조회 response가 업데이트 시 useEffect 실행
         => useEffect가 실행하면 검색어 조회 response로 files의 상태를 변경시킨다. */
-    useEffect(()=>{
-        if(fetchSearch[0].response){
-            console.log(fetchSearch[0].response.data);
+    useEffect(() => {
+        if (fetchSearch[0].response) {
+            const { message, data } = fetchSearch[0].response;
+        
+            console.log(message);
+            setFiles(data);
+        
+            if (data.length === 0) {
+                alert(message);
+            }
         }
-    },[fetchSearch[0].response])
+    }, [fetchSearch[0].response]);
 
     const onSearch = (text: string) => {
-        setSearch(text);
+        const keyword = text.trim();
+
+        if (!keyword) {
+            setSearch("");
+            fetchFile[1]();
+            return;
+        }
+
+        setSearch(keyword);
     }
 
     return(
@@ -66,7 +82,10 @@ const ManagerPage = () => {
             <div className={clsN(styles['manager-wrapper'])}>
                 <div className={clsN(styles['manager-title'])}>
                     <h1>파일 관리</h1>
-                    <button>업로드</button>
+                    <button>
+                        <Upload/>
+                        업로드
+                    </button>
                 </div>
                 {files && <ManagerFileList files={files} onSearch={onSearch}/>}                
             </div>

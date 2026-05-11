@@ -17,14 +17,12 @@ router = APIRouter(tags=["Summary"])
 )
 async def summarize_uploaded_file(
     upload_id: int,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     upload = (
         db.query(Upload)
         .filter(
             Upload.upload_id == upload_id,
-            Upload.user_id == current_user.id
         )
         .first()
     )
