@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, field_serializer, ConfigDict
+from typing import List
 from datetime import datetime
 
 class UserCreate(BaseModel):
@@ -43,6 +44,13 @@ class FileResponse(BaseModel):
             return None
 
         return value.strftime("%Y년 %m월 %d일")
+    
+class FileSearchResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    message: str
+    data: List[FileResponse]
+    code: int
 
 class FileDelete(BaseModel):
     message: str

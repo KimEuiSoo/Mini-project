@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, UploadFile, status, File, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, status, File, Depends, Query
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from typing import List
@@ -10,7 +10,7 @@ import uuid
 from models import User, Upload
 from database import get_db
 from auth.dependencies import get_current_user
-from schemas import FileResponse, FileDelete
+from schemas import FileResponse, FileDelete, FileSearchResponse
 
 
 load_dotenv()
@@ -75,6 +75,43 @@ def file_list(
     )
 
     return files
+ 
+@router.get(
+    "/file/admin/search",
+    response_model=FileSearchResponse,
+    response_model_by_alias=True
+)
+def file_admin_search(
+    keyword: str | None = Query(None, description="검색할 파일명"),
+    file_type: str = Query("all", description="파일 타입"),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Upload)
+
+    if keyword:
+        query = query.filter(Upload.upload_name.like(f"%{keyword}%"))
+
+    if file_type != "all":
+        query = query.filter(Upload.upload_type.like(f"%{file_type}%"))
+
+    files = (
+        query
+        .order_by(Upload.created_at.desc())
+        .all()
+    )
+
+    if not files:
+        return {
+            "message": "검색한 데이터가 없습니다.",
+            "data": [],
+            "code": 200
+        }
+
+    return {
+        "message": "검색 성공",
+        "data": files,
+        "code": 200
+    }
 
 @router.delete(
     "/file/admin/delete/{upload_id}",

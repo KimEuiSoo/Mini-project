@@ -11,3 +11,9 @@ export interface fileResponse{
     fileType: string,
     createdAt: string,
 }
+
+export interface fileSearchResponse{
+    message: string,
+    data: fileResponse[],
+    code: number,
+}

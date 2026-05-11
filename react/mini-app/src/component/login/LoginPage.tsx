@@ -28,8 +28,19 @@ const LoginPage = () => {
 	});
 
   const onClickHandle = () => {
-    if(email===process.env.REACT_APP_ADMIN_ID && password===process.env.REACT_APP_ADMIN_PW){
-      navigation('/manager');
+    const adminId = process.env.REACT_APP_ADMIN_ID;
+    const adminPw = process.env.REACT_APP_ADMIN_PW;
+    const adminToken = process.env.REACT_APP_ADMIN_TOKEN;
+  
+    if (email === adminId && password === adminPw) {
+      if (!adminToken) {
+        alert("관리자 토큰이 설정되지 않았습니다.");
+        return;
+      }
+  
+      setCookie("AccessToken", adminToken);
+      navigation("/manager");
+      return;
     }else{
       fetch[1]();
     }
