@@ -145,30 +145,33 @@ def file_admin_delete(
         )
 
     try:
-        db.query(Upload).filter(
-            Upload.upload_id == upload_id,
-            Upload.user_id == current_user.id
-        ).delete()
+        # DB에 저장된 실제 파일 경로
+        file_path = Path(upload.file_path)
+
+        # 실제 서버 폴더에 파일이 존재하면 삭제
+        if file_path.exists() and file_path.is_file():
+            file_path.unlink()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="서버에 저장된 파일을 찾을 수 없습니다."
+            )
+
+        # 실제 파일 삭제 성공 후 DB 데이터 삭제
+        db.delete(upload)
         db.commit()
-    
+
         return {
             "message": "해당 파일을 성공적으로 삭제하였습니다.",
             "code": 200
         }
-    
-    except FileNotFoundError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="서버에 저장된 파일을 찾을 수 없습니다."
-        )
-    
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+
+    except HTTPException:
+        db.rollback()
+        raise
 
     except Exception as e:
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"문서 삭제 중 오류가 발생했습니다: {str(e)}"
@@ -183,42 +186,46 @@ def file_admin_delete(
     upload_id: int,
     db: Session = Depends(get_db)
 ):
-    delete = (
+    upload = (
         db.query(Upload)
-        .filter(
-            Upload.upload_id == upload_id,
-        )
+        .filter(Upload.upload_id == upload_id)
         .first()
     )
 
-    if delete is None:
+    if upload is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="파일을 찾을 수 없습니다."
         )
 
     try:
-        db.query(Upload).filter(Upload.upload_id == upload_id).delete()
+        # DB에 저장된 실제 파일 경로
+        file_path = Path(upload.file_path)
+
+        # 실제 서버 폴더에 파일이 존재하면 삭제
+        if file_path.exists() and file_path.is_file():
+            file_path.unlink()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="서버에 저장된 파일을 찾을 수 없습니다."
+            )
+
+        # 실제 파일 삭제 성공 후 DB 데이터 삭제
+        db.delete(upload)
         db.commit()
-    
+
         return {
             "message": "해당 파일을 성공적으로 삭제하였습니다.",
             "code": 200
         }
-    
-    except FileNotFoundError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="서버에 저장된 파일을 찾을 수 없습니다."
-        )
-    
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+
+    except HTTPException:
+        db.rollback()
+        raise
 
     except Exception as e:
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"문서 삭제 중 오류가 발생했습니다: {str(e)}"

@@ -18,3 +18,8 @@ export interface fileSearchResponse{
     data: fileResponse[],
     code: number,
 }
+
+export interface fileDeleteResponse{
+    message: string,
+    code: number,
+}

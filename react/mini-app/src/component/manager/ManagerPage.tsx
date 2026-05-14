@@ -3,12 +3,13 @@ import clsN from "classnames"
 import styles from "./styles/ManagerPage.module.scss"
 import ManagerFileList from "./ManagerFileList";
 import useAxios from "../../hooks/useAxios";
-import { fileResponse,fileSearchResponse } from "../../models/uploadResponse";
+import { fileDeleteResponse, fileResponse,fileSearchResponse } from "../../models/uploadResponse";
 import { Upload } from 'lucide-react';
 
 const ManagerPage = () => {
     const [files, setFiles] = useState<fileResponse[]>();
     const [search, setSearch] = useState<string>();
+    const [deleteId, setDeleteId] = useState<number>();
 
     /* 파일 리스트 조회 api*/
     const fetchFile = useAxios<fileResponse[]>({
@@ -25,6 +26,11 @@ const ManagerPage = () => {
                 keyword: search,
             }
         }
+    })
+
+    const fetchDelete = useAxios<fileDeleteResponse>({
+        method: 'delete',
+        url: deleteId ? `/file/admin/delete/${deleteId}` : '',
     })
     
     /* mount, unmount 시 useEffect 실행
@@ -65,6 +71,10 @@ const ManagerPage = () => {
         }
     }, [fetchSearch[0].response]);
 
+    useEffect(() => {
+        fetchDelete[1]();
+    }, [deleteId])
+
     const onSearch = (text: string) => {
         const keyword = text.trim();
 
@@ -77,6 +87,11 @@ const ManagerPage = () => {
         setSearch(keyword);
     }
 
+    const onDeleteHandle = (fileId: number) => {
+        console.log(`${fileId} 파일 삭제 완료`);
+        
+    }
+
     return(
         <div className={clsN(styles.manager)}>
             <div className={clsN(styles['manager-wrapper'])}>
@@ -87,7 +102,7 @@ const ManagerPage = () => {
                         업로드
                     </button>
                 </div>
-                {files && <ManagerFileList files={files} onSearch={onSearch}/>}                
+                {files && <ManagerFileList files={files} onSearch={onSearch} onDelete={onDeleteHandle}/>}                
             </div>
         </div>
     )

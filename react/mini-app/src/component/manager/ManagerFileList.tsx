@@ -10,9 +10,10 @@ import { EllipsisVertical } from 'lucide-react';
 interface ManagerFileListProps{
     files: fileResponse[];
     onSearch: (text:string) => void;
+    onDelete: (fileId: number) => void;
 }
 
-const ManagerFileList = ({files, onSearch}: ManagerFileListProps) => {
+const ManagerFileList = ({files, onSearch, onDelete}: ManagerFileListProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     
     const onSearchHandle = () => {
@@ -103,7 +104,7 @@ const ManagerFileList = ({files, onSearch}: ManagerFileListProps) => {
                                             <Download/>
                                         </button>
 
-                                        <button type="button" className={clsN(styles["file-table__delete"])}>
+                                        <button type="button" onClick={()=>onDelete(file.fileId)} className={clsN(styles["file-table__delete"])}>
                                             <Trash2/>
                                         </button>
 
